@@ -67,12 +67,12 @@ const generateConfig=env=>{
         //入口文件的配置项
         entry:{
             app:'./src/app.js',
-            vender:['react']
+            vender:['react','react-dom']
         },
         //出口文件的配置项
         output:{
             path:path.resolve(__dirname,'../dist'),
-            filename:'js/[name].[chunkhash].js',
+            filename:'js/[name].[hash:5].js',
             publicPath:'/'
         },
         resolve:{
@@ -81,7 +81,7 @@ const generateConfig=env=>{
         module:{
             rules:[
                 {   //编译es6和es7成es5的
-                    test: /\.js$/,
+                    test: /\.jsx?$/,
                     exclude: /node_modules/,
                     loader: 'babel-loader',
                 },

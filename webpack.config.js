@@ -1,6 +1,7 @@
 const Webpack = require('webpack');
 const path = require('path');
 
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlInlineChunkPlugin = require('html-webpack-inline-chunk-plugin');
 const htmlPlugin= require('html-webpack-plugin');
@@ -10,27 +11,27 @@ module.exports={
     //入口文件的配置项
     entry:{
         app:'./src/app.js',
-        vender:['react']
+        vender:['react','react-dom']
     },
     //出口文件的配置项
     output:{
         path:path.resolve(__dirname,'dist'),
-        filename:'js/[name].[chunkhash].js',
+        filename:'js/[name].[hash:5].js',
         publicPath:'/'
     },
     //进行调试的
-    devtool:'source-map',
+   // devtool:'source-map',
     //模块：例如解读css 图片如何转化，压缩
     module:{
         rules:[
             {   //编译es6和es7成es5的
-                test: /\.js$/,
+                test: /\.jsx?$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
-                options: {
-                    presets: ['babel-preset-env'],
-                    plugins: ['transform-runtime']
-                }
+                // options: {
+                //     presets: ['babel-preset-env'],
+                //     plugins: ['transform-runtime']
+                // }
               
             },
             {
