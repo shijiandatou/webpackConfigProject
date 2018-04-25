@@ -142,7 +142,7 @@ module.exports={
         }),
         //对css进行tree shaking
         // new PurifyCSSPlugin({
-        //     paths:glob.sync(path.join(__dirname,'./*.html'))
+        //     paths:glob.sync(path.join(__dirname,'./dist/*.html'))
         // }),
         //对js 进行 tree shaping  对js进行压缩
         //new Webpack.optimize.UglifyJsPlugin(),
