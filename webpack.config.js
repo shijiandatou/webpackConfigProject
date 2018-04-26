@@ -5,13 +5,14 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlInlineChunkPlugin = require('html-webpack-inline-chunk-plugin');
 const htmlPlugin= require('html-webpack-plugin');
-// const PurifyCSSPlugin  = require('purifycss-webpack');
-// const glob = require('glob');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const PurifyCSSPlugin  = require('purifycss-webpack');
+const glob = require('glob-all');
 module.exports={
     //入口文件的配置项
     entry:{
         app:'./src/app.js',
-        vender:['react','react-dom']
+      //  vender:['react','react-dom']
     },
     //出口文件的配置项
     output:{
@@ -20,7 +21,7 @@ module.exports={
         publicPath:'/'
     },
     //进行调试的
-   // devtool:'source-map',
+  // devtool:'source-map',
     //模块：例如解读css 图片如何转化，压缩
     module:{
         rules:[
@@ -109,20 +110,9 @@ module.exports={
     },
     //插件 用于生产模块和各项功能
     plugins:[
-        //进行第三方的长缓存
-        new Webpack.NamedChunksPlugin(),
-        new Webpack.NamedModulesPlugin(),
-        //打包公共代码的
-        new Webpack.optimize.CommonsChunkPlugin({
-            name:'vender',
-            minChunks:2,
+        new Webpack.DllReferencePlugin({
+            manifest:require('./src/dll/react-manifest.json')
         }),
-        //打包公共代码的
-        new Webpack.optimize.CommonsChunkPlugin({
-            name:'manifet',
-            minChunks:Infinity,
-        }),
-        
         new htmlPlugin({
             // minify:{
             //     collapseWhitespace:true
@@ -133,17 +123,41 @@ module.exports={
         new HtmlInlineChunkPlugin({
             inlineChunks:['manifet']
         }),
+        new AddAssetHtmlPlugin({
+            filepath: path.resolve(__dirname,'src/dll/react.dll.js'),
+            hash: true
+        }),
+        //进行第三方的长缓存
+        // new Webpack.NamedChunksPlugin(),
+        // new Webpack.NamedModulesPlugin(),
+        //打包公共代码的
+        // new Webpack.optimize.CommonsChunkPlugin({
+        //     name:'vender',
+        //     minChunks:2,
+        // }),
+        //打包公共代码的
+        new Webpack.optimize.CommonsChunkPlugin({
+            name:'manifet',
+            minChunks:Infinity,
+        }),
+        
+        
         // 清除dist文件
        new CleanWebpackPlugin('./dist'),
         //提取css
         new ExtractTextPlugin({
             filename:'css/[name].min.css',
-            allChunks:true
+            allChunks:false
         }),
         //对css进行tree shaking
-        // new PurifyCSSPlugin({
-        //     paths:glob.sync(path.join(__dirname,'./dist/*.html'))
-        // }),
+        new PurifyCSSPlugin({
+            paths:glob.sync([
+                path.join(__dirname,'./*.html'),
+                path.join(__dirname,'./src/*.js')
+            ])
+            // path:(),
+            // path:glob.sync()
+        }),
         //对js 进行 tree shaping  对js进行压缩
         //new Webpack.optimize.UglifyJsPlugin(),
         //html生成模板

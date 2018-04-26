@@ -6,6 +6,7 @@ const htmlPlugin= require('html-webpack-plugin');
 
 const merge = require('webpack-merge');
 const path = require('path');
+const webpack = require('webpack');
 
 const generateConfig=env=>{
     const extractLess = new ExtractTextPlugin({
@@ -66,7 +67,7 @@ const generateConfig=env=>{
         //入口文件的配置项
         entry:{
             app:'./src/app.js',
-            vender:['react','react-dom']
+           // vender:['react','react-dom']
         },
         //出口文件的配置项
         output:{
@@ -113,6 +114,10 @@ const generateConfig=env=>{
         },
         plugins:[
             extractLess,
+            //优化打包速度的
+            new webpack.DllReferencePlugin({
+                manifest:require('../src/dll/react-manifest.json')
+            }),
             new htmlPlugin({
                 minify:{
                     collapseWhitespace:true
