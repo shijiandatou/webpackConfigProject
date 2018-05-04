@@ -21,7 +21,7 @@ module.exports={
         publicPath:'/'
     },
     //进行调试的
-  // devtool:'source-map',
+    devtool:'source-map',
     //模块：例如解读css 图片如何转化，压缩
     module:{
         rules:[
@@ -150,14 +150,14 @@ module.exports={
             allChunks:false
         }),
         //对css进行tree shaking
-        new PurifyCSSPlugin({
-            paths:glob.sync([
-                path.join(__dirname,'./*.html'),
-                path.join(__dirname,'./src/*.js')
-            ])
-            // path:(),
-            // path:glob.sync()
-        }),
+        // new PurifyCSSPlugin({
+        //     paths:glob.sync([
+        //         path.join(__dirname,'./*.html'),
+        //         path.join(__dirname,'./src/*.js')
+        //     ])
+        //     // path:(),
+        //     // path:glob.sync()
+        // }),
         //对js 进行 tree shaping  对js进行压缩
         //new Webpack.optimize.UglifyJsPlugin(),
         //html生成模板
